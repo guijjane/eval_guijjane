@@ -1,9 +1,31 @@
 const express = require('express')
+const{Client}=require('pg')
 const app = express()
 const port = 3000
 let trans = require('./transaction')
 let display = require('./view')
 
+
+
+
+  app.get('/',(req,res)=>{
+    res.json({
+      message:"voir la base "
+    })
+  })
+  app.get('/db',(req,res)=>{
+    const client = new Client({
+      user: 'postgres',
+      host: 'localhost',
+      database: 'banque',
+      password: 'root',
+      port: 5432,
+    })
+    client.connect()
+    client.query('SELECT * from transaction',(err,result)=>{
+      res.send(result.rows)
+    })
+  })
 
 app.use(express.json())
 
